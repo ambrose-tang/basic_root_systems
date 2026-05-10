@@ -7,9 +7,14 @@ noncomputable section
 open Set
 open Submodule
 
+namespace RootLib
+
 -- ⟨β, α⟩ definition
 def coeff (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (α β : E) : ℝ :=
   (2 * @inner ℝ E _ β α) / (@inner ℝ E _ α α)
+
+def P_refl (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (α : E) : Set E :=
+  {β : E | @inner ℝ E _ β α = 0}
 
 -- Proving σ_α ∈ GL(E) = E ≃L[ ℝ ] E
 def σ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (α : E) : E ≃L[ℝ] E where
@@ -110,3 +115,5 @@ structure RootSystem (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E
     -- If α ∈ Φ, the reflection σ_α leaves Φ invariant.
   R4 : ∀ α β : E, α ∈ Φ -> β ∈ Φ -> ∃n : ℤ, ↑n = coeff E α β
     -- If α, β ∈ Φ, then coeff α, β ∈ ℤ
+
+end RootLib
