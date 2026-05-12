@@ -118,7 +118,9 @@ structure RootSystem (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E
       {σ E α | α ∈ Φ}
 
   -- Axioms
-  R1 : (Submodule.span ℝ (Φ : Set E) = ⊤) ∧ (0 ∉ Φ)
+  R1_1: Submodule.span ℝ (Φ : Set E) = ⊤
+    -- Φ is finite, spans E, and does not contain 0.
+  R1_2: 0 ∉ Φ
     -- Φ is finite, spans E, and does not contain 0.
   R2 : ∀ α : E, α ∈ Φ -> ∀ c : ℝ, c • α ∈ Φ -> c = 1 ∨ c = -1
     -- If α ∈ Φ, the only multiples of α in Φ are ±a.
