@@ -100,20 +100,31 @@ def σ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (α : E) : E
           Continuous fun β : E => ((2 : ℝ) * inner ℝ β α) / inner ℝ α α)
     simpa using continuous_id.sub (hcoeff.smul continuous_const)
 
+theorem refl_a_a_neg (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (α : E) :
+  σ E α α = -α := by
+  simp [σ, coeff]
+  field_simp
+  rcases eq_or_ne α 0 with rfl | hα
+  · simp
+  · have h_norm : ‖α‖ ≠ 0 := norm_ne_zero_iff.mpr hα
+    rw [mul_div_cancel_right₀ 2 h_norm]
+    rw [two_smul]
+    abel
+
 structure RootSystem (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
-  Φ : Set E
+  Φ : Finset E
   W : Subgroup (E ≃L[ℝ] E) :=
     Subgroup.closure
       {σ E α | α ∈ Φ}
 
   -- Axioms
-  R1 : Set.Finite Φ ∧ Submodule.span ℝ Φ = ⊤ ∧ 0 ∉ Φ
+  R1 : (Submodule.span ℝ (Φ : Set E) = ⊤) ∧ (0 ∉ Φ)
     -- Φ is finite, spans E, and does not contain 0.
-  R2 : ∀ α : E, α ∈ Φ -> (Submodule.span ℝ ({α} : Set E) : Set E) ∩ Φ = {-α, α}
+  R2 : ∀ α : E, α ∈ Φ -> ∀ c : ℝ, c • α ∈ Φ -> c = 1 ∨ c = -1
     -- If α ∈ Φ, the only multiples of α in Φ are ±a.
-  R3: ∀ α β : E, α ∈ Φ -> β ∈ Φ -> σ E α β ∈ Φ
+  R3: ∀ ⦃ α β ⦄, α ∈ Φ -> β ∈ Φ -> σ E α β ∈ Φ
     -- If α ∈ Φ, the reflection σ_α leaves Φ invariant.
-  R4 : ∀ α β : E, α ∈ Φ -> β ∈ Φ -> ∃n : ℤ, ↑n = coeff E α β
+  R4 : ∀ ⦃ α β ⦄, α ∈ Φ -> β ∈ Φ -> ∃n : ℤ, ↑n = coeff E α β
     -- If α, β ∈ Φ, then coeff α, β ∈ ℤ
 
 end RootLib
